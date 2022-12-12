@@ -16,10 +16,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Servlet implementation class ListMovies
+ * Servlet implementation class SearchMovies
  */
-@WebServlet("/ListMovies")
-public class ListMovies extends HttpServlet {
+@WebServlet("/SearchMovies")
+public class SearchMovies extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	String dns = "ec2-18-188-80-27.us-east-2.compute.amazonaws.com";
@@ -27,7 +27,7 @@ public class ListMovies extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ListMovies() {
+    public SearchMovies() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,7 +43,7 @@ public class ListMovies extends HttpServlet {
         PreparedStatement statement1 = null;
         ResultSet rs = null;
         PreparedStatement preparedStatement = null;
-        String keyword = request.getParameter("keyword");
+        String search = request.getParameter("search");
         response.setContentType("text/html");
         
 		PrintWriter out = response.getWriter();
@@ -78,7 +78,7 @@ public class ListMovies extends HttpServlet {
         System.out.println("SUCCESS!!!! You made it, take control your database now!");
         System.out.println("Creating statement...");
 
-        sql = "SELECT * FROM Movies";
+        sql = "SELECT * FROM Movies WHERE Title LIKE '%" + search + "%'";
         try {
 
             statement1 = connection.prepareStatement(sql);
@@ -96,7 +96,9 @@ public class ListMovies extends HttpServlet {
             e1.printStackTrace();
         }
         try {
+        	int totalRows = 0;
             while (rs.next()) {
+            	totalRows++;
                 //Retrieve by column name
                 String title = rs.getString("Title");
                 String desc = rs.getString("Description");
@@ -108,6 +110,9 @@ public class ListMovies extends HttpServlet {
                 			genre + "<br>" + 
                 			rDate + "</p>");
                 
+            }
+            if (totalRows <= 0) {
+            	out.println("<p align=\"center\">No titles found.</p>");
             }
             out.println("</body></html>");
         } catch (SQLException e) {
