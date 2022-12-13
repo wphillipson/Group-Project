@@ -54,7 +54,6 @@ public class SearchMovies extends HttpServlet {
         out.println(docType +
             "<html>\n" +
             "<head><title>" + name + "</title></head>\n" +
-            "<body bgcolor = \"##CCCCFF\">\n" +
             "<h1 align = \"center\">" + name + "</h1>\n");
         out.println("<form action=\"ListMovies\" method=\"post\">" +
             	"<p align=\"center\"><input type=\"submit\" value=\"Return to main list\"/></p></form>");
