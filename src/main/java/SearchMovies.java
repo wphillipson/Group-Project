@@ -56,9 +56,11 @@ public class SearchMovies extends HttpServlet {
             "<head><title>" + name + "</title></head>\n" +
             "<body bgcolor = \"##CCCCFF\">\n" +
             "<h1 align = \"center\">" + name + "</h1>\n");
+        out.println("<form action=\"ListMovies\" method=\"post\">" +
+            	"<p align=\"center\"><input type=\"submit\" value=\"Return to main list\"/></p></form>");
         out.println("<form action=\"SearchMovies\" method=\"post\">" +
             "<p align=\"center\">Search: <input type=\"test\" name=\"search\"/></p>" +
-        	"<p align=\"center\"><input type=\"submit\"/></p></form>");
+            "<p align=\"center\"><input type=\"submit\" value=\"Search\"/></p></form>");
         
 
         try {
@@ -70,14 +72,12 @@ public class SearchMovies extends HttpServlet {
         }
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://" + dns + ":3306/myDB", "wphillipson", "Cl@ssWork");
+            connection = DriverManager.getConnection("jdbc:mysql://" + dns + ":3306/myDB?useSSL=false", "wphillipson", "Cl@ssWork");
         } catch (SQLException e2) {
             // TODO Auto-generated catch block
             System.out.println("Connection Failed!:\n" + e2.getMessage());
         }
-        System.out.println("SUCCESS!!!! You made it, take control your database now!");
-        System.out.println("Creating statement...");
-
+        System.out.println("Searching for all movies with \"" + search + "\" in the title...");
         sql = "SELECT * FROM Movies WHERE Title LIKE '%" + search + "%'";
         try {
 
@@ -97,6 +97,7 @@ public class SearchMovies extends HttpServlet {
         }
         try {
         	int totalRows = 0;
+        	System.out.println("Listing search results...");
             while (rs.next()) {
             	totalRows++;
                 //Retrieve by column name
@@ -109,12 +110,14 @@ public class SearchMovies extends HttpServlet {
                 out.println("<p align=\"center\">" + desc + "<br>" + 
                 			genre + "<br>" + 
                 			rDate + "</p>");
+            	System.out.println("   Listed " + title);
                 
             }
             if (totalRows <= 0) {
             	out.println("<p align=\"center\">No titles found.</p>");
             }
             out.println("</body></html>");
+            System.out.println("Listed " + totalRows + " movies.");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -58,7 +58,7 @@ public class ListMovies extends HttpServlet {
             "<h1 align = \"center\">" + name + "</h1>\n");
         out.println("<form action=\"SearchMovies\" method=\"post\">" +
             "<p align=\"center\">Search: <input type=\"test\" name=\"search\"/></p>" +
-        	"<p align=\"center\"><input type=\"submit\"/></p></form>");
+        	"<p align=\"center\"><input type=\"submit\" value=\"Search\"/></p></form>");
         
 
         try {
@@ -70,13 +70,11 @@ public class ListMovies extends HttpServlet {
         }
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://" + dns + ":3306/myDB", "wphillipson", "Cl@ssWork");
+            connection = DriverManager.getConnection("jdbc:mysql://" + dns + ":3306/myDB?useSSL=false", "wphillipson", "Cl@ssWork");
         } catch (SQLException e2) {
             // TODO Auto-generated catch block
             System.out.println("Connection Failed!:\n" + e2.getMessage());
         }
-        System.out.println("SUCCESS!!!! You made it, take control your database now!");
-        System.out.println("Creating statement...");
 
         sql = "SELECT * FROM Movies";
         try {
@@ -96,6 +94,7 @@ public class ListMovies extends HttpServlet {
             e1.printStackTrace();
         }
         try {
+        	System.out.println("Listing all movies...");
             while (rs.next()) {
                 //Retrieve by column name
                 String title = rs.getString("Title");
@@ -107,9 +106,11 @@ public class ListMovies extends HttpServlet {
                 out.println("<p align=\"center\">" + desc + "<br>" + 
                 			genre + "<br>" + 
                 			rDate + "</p>");
+            	System.out.println("   Listed " + title);
                 
             }
             out.println("</body></html>");
+            System.out.println("Listed all movies.");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
